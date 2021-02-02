@@ -53,6 +53,17 @@ sleep 10
 mkfs.xfs /dev/vg_data/lv_data
 mount /dev/vg_data/lv_data /data/
 
-mounts:
-  - ["/dev/sda1", "/"]
-  - ["/dev/vg_data/lv_data", "/data"]
+
+# extend by adding new disk:
+
+add disk, choose no FS
+pvcreate /dev/sdb #### (sdc sdd and so on) (ignore errors about existing FS)
+vgextend vg_data /dev/sdb
+lvextend /dev/vg_data/lv_data /dev/sdb
+xfs_growfs /data/
+
+# extend by resizing existing disk:
+
+pvresize /dev/sdb
+lvresize /dev/vg_data/lv_data /dev/sdb
+xfs_growfs /data/  
