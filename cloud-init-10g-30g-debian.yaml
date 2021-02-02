@@ -43,3 +43,16 @@ runcmd:
 mounts:
   - ["/dev/sda1", "/"]
   - ["/dev/vg_data/lv_data", "/data"]
+
+##############
+
+pvcreate /dev/sda2
+vgcreate vg_data /dev/sda2
+lvcreate -l 100%FREE -n lv_data vg_data
+sleep 10
+mkfs.xfs /dev/vg_data/lv_data
+mount /dev/vg_data/lv_data /data/
+
+mounts:
+  - ["/dev/sda1", "/"]
+  - ["/dev/vg_data/lv_data", "/data"]
