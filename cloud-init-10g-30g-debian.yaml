@@ -1,0 +1,45 @@
+#cloud-config
+resize_rootfs: false
+
+disk_setup:
+  /dev/sda:
+    table_type: 'mbr'
+    layout:
+      - 25
+      - 75
+    overwrite: true
+
+fs_setup:
+  - label: root_fs
+    filesystem: 'ext4'
+    device: /dev/sda
+    partition: sda1
+    overwrite: true
+#  - label: data
+#    filesystem: 'xfs'
+#    device: /dev/sda
+#    partition: sda2
+#    overwrite: true
+
+packages:
+  - xfsprogs
+  - parted
+  - lvm2
+
+# now we attach the settings
+runcmd:
+  - [ partx, --update, /dev/sda ]
+  - [ partprobe ]
+  - parted /dev/sda set 1 boot on p
+  - resize2fs /dev/sda1
+  - [ pvcreate, /dev/sda2 ]
+  - [ vgcreate, vg_data, /dev/sda2 ]
+  - [ lvcreate, -l, 100%FREE, -n, lv_data, vg_data ]
+  - echo sleep 10
+  - sleep 10
+  - [ mkfs.xfs, /dev/vg_data/lv_data ]
+  - [ mount, /dev/vg_data/lv_data, /data/ ]
+
+mounts:
+  - ["/dev/sda1", "/"]
+  - ["/dev/vg_data/lv_data", "/data"]
