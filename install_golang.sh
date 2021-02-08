@@ -1,3 +1,13 @@
+wget https://golang.org/dl/go1.15.8.linux-amd64.tar.gz
+tar -C /usr/local -xzf go1.15.8.linux-amd64.tar.gz
+echo 'export PATH=$PATH:/usr/local/go/bin' >> $HOME/.bashrc
+echo 'export GOPATH=/usr/local/go' >> $HOME/.bashrc
+source ~/.bashrc
+go version
+
+
+
+
 #!/bin/bash
 GO_VERSION=${GO_VERSION:=1.15.2}
 
