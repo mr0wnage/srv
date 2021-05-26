@@ -4,7 +4,7 @@
 LANG=C
 echo "Network data:"
 
-for i in $(ifconfig -a | egrep '^eth.+|^enp.+' | cut -d ':' -f 1); do
+for i in $(ifconfig -a | egrep '^eth.+|^en.+' | cut -d ':' -f 1); do
   # detect link
   link=$(ethtool $i | grep "Link detected" | tr -s ' ' | cut -d: -f2)
   # get mac address
